@@ -127,5 +127,4 @@ class RecipeView {
 </li>`;
   }
 }
-
 export default new RecipeView();
