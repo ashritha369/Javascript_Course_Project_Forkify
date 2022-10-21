@@ -1,3 +1,5 @@
+// we want to import everything as model ,so used *model
+import * as model from "./model.js";
 import icons from "url:../img/icons.svg"; //parcel 2
 import "core-js/stable";
 import "regenerator-runtime/runtime";
@@ -29,40 +31,21 @@ const renderSpinner = function (parentEl) {
 const showRecipe = async function () {
   try {
     // HASH CHANGE
-
     const id = window.location.hash.slice(1);
     console.log(id);
 
     // guard class:if there is no id, then return
     if (!id) return;
-    // LOADING RECIPE
-
+    ///////////////////
     renderSpinner(recipeContainer);
-    const res = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`
-    );
-    // converting result back to json and storing it in data
-    const data = await res.json();
-    // if res.ok===false then custom error should be thrown as
-    if (!res.ok) {
-      throw new Error(`${data.message} (${res.status})`);
-    }
-    //////////////////
-    // Creating new object from data(for our convenience)
-    // let recipe = data.data.recipe; recipe on both sides, so using object destructuring
-    let { recipe } = data.data;
-    recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-    };
-    console.log(recipe);
-    // RENDERING RECIPE
+    //1)LOADING RECIPE: loadRecipe func is async so it will return a promise. so we are awaiting it before we move on to next step. Here loadRecipe will not return anything so we are not storing it in any variable, instead here we can access state.recipe of model.js
+    await model.loadRecipe(id);
+    // we now have access to below
+    // const recipe = model.state.recipe;
+    // destructuring above line as below:
+    const { recipe } = model.state;
+
+    // 2)RENDERING RECIPE
     const markup = `   
     <figure class="recipe__fig">
       <img src="${recipe.image}" alt="Tomato" class="recipe__img" />
@@ -162,7 +145,9 @@ const showRecipe = async function () {
     alert(err);
   }
 };
-
+// 1. hashchange.addEventlistener("hashchange", showRecipe)
+// 2. load.addEventlistener("load", showRecipe)
+// In short we wrote as below:
 ["hashchange", "load"].forEach((eventItem) =>
   window.addEventListener(eventItem, showRecipe)
 );
