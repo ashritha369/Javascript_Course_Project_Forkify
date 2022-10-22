@@ -5,6 +5,11 @@ class RecipeView {
   #parentElement = document.querySelector(".recipe");
   //   declaring data
   #data;
+  // declaring errorMessage
+  #errorMessage = `We could not find that recipe. Please try another one!`;
+  // declaring successMessage
+  #successMessage = ``;
+
   // here render will receive all data(i.e model.state.recipe) from API( by controller.js) and will set data to this. #data
   render(data) {
     this.#data = data;
@@ -18,15 +23,47 @@ class RecipeView {
   }
   //RENDER SPINNER
   //Here "renderSpinner" is a public method
-  renderSpinner = function () {
+  renderSpinner() {
     const markup = ` <div class="spinner">
                         <svg>
                           <use href="${icons}#icon-loader"></use>
                         </svg>
                     </div> `;
-    this.#parentElement.innerHTML = "";
+    this.#clear;
     this.#parentElement.insertAdjacentHTML("afterbegin", markup);
-  };
+  }
+  // ERROR MESSAGE
+  renderError(message = this.#errorMessage) {
+    const markup = `
+        <div class="error">
+        <div>
+          <svg>
+            <use href="${icons}#icon-alert-triangle"></use>
+          </svg>
+        </div>
+        <p>${message}</p>
+      </div>
+    `;
+    // clearing the parent element
+    this.#clear;
+    this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+  }
+  // SUCCESS MESSAGE
+  renderMessage(message = this.#successMessage) {
+    const markup = `
+        <div class="message">
+        <div>
+          <svg>
+            <use href="${icons}#icon-smile"></use>
+          </svg>
+        </div>
+        <p>${message}</p>
+      </div>
+    `;
+    // clearing the parent element
+    this.#clear;
+    this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+  }
   addHandlerRender(handler) {
     // 1. hashchange.addEventlistener("hashchange", controlRecipes)
     // 2. load.addEventlistener("load", controlRecipes)

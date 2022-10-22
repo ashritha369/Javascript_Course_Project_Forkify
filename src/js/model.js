@@ -29,5 +29,7 @@ export const loadRecipe = async function (id) {
   } catch (err) {
     //Temporary error handling
     console.error(`${err} :::::: `);
+    // we will throw the err like below, so this error will propagate to controller.js and then to recipeview via renderError()
+    throw err;
   }
 };

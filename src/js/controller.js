@@ -30,7 +30,7 @@ const controlRecipes = async function () {
     recipeView.render(model.state.recipe);
     // render() method will take that data and will store that data as this. #data in recipeView.js
   } catch (err) {
-    alert(err);
+    recipeView.renderError();
   }
 };
 
