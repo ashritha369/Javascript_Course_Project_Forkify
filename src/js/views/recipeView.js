@@ -27,7 +27,14 @@ class RecipeView {
     this.#parentElement.innerHTML = "";
     this.#parentElement.insertAdjacentHTML("afterbegin", markup);
   };
-
+  addHandlerRender(handler) {
+    // 1. hashchange.addEventlistener("hashchange", controlRecipes)
+    // 2. load.addEventlistener("load", controlRecipes)
+    // In short we wrote as below:
+    ["hashchange", "load"].forEach((eventItem) =>
+      window.addEventListener(eventItem, handler)
+    );
+  }
   //   we are using babel here, and declaring the private variable/ function hence #
   #generateMarkup() {
     return `   
