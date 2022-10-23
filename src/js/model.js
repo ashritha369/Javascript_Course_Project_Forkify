@@ -4,13 +4,17 @@ import { getJSON } from "./helpers.js";
 // named export "state"
 export const state = {
   recipe: {},
+  search: {
+    query: "",
+    results: [],
+  },
 };
 
 // loadRecipe function is responsible for actually fetching the recipe from the API.
 // named export "loadRecipe"
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJSON(`${API_URL}/${id}`);
+    const data = await getJSON(`${API_URL}${id}`);
 
     // Creating new object from data(for our convenience)
     // let recipe = data.data.recipe; recipe on both sides, so using object destructuring
@@ -33,3 +37,28 @@ export const loadRecipe = async function (id) {
     throw err;
   }
 };
+// Working on search results
+
+export const loadSearchResults = async function (query) {
+  try {
+    state.search.query = query;
+    // https://forkify-api.herokuapp.com/api/v2/recipes?search=pizza
+    const data = await getJSON(`${API_URL}?search=${query}`);
+    console.log(data);
+    // now lets map over each recipe(rec) with the data.data.recipes
+    state.search.results = data.data.recipes.map((rec) => {
+      return {
+        id: rec.id,
+        title: rec.title,
+        publisher: rec.publisher,
+        image: rec.image_url,
+      };
+    });
+  } catch (err) {
+    console.error(`${err} :::::: `);
+    // we will throw the err like below, so this error will propagate to controller.js and then to recipeview via renderError()
+    throw err;
+  }
+};
+
+//we need to call loadSearchResults in controller

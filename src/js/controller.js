@@ -2,19 +2,17 @@
 import * as model from "./model.js";
 //importing recipe view
 import recipeView from "./views/recipeView.js";
+import searchView from "./views/searchView.js";
 
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import recipeView from "./views/recipeView.js";
-
-const recipeContainer = document.querySelector(".recipe");
 
 // SHOW RECIPE
 const controlRecipes = async function () {
   try {
     // HASH CHANGE
     const id = window.location.hash.slice(1);
-    console.log(id);
 
     // guard class:if there is no id, then return
     if (!id) return;
@@ -33,9 +31,27 @@ const controlRecipes = async function () {
     recipeView.renderError();
   }
 };
+// SEARCH RECIPE
+const controlSearchResults = async function () {
+  try {
+    // 1)GET SEARCH QUERY , here query can be anything like 'pizza';
+    const query = searchView.getQuery();
+    // if there is no query then return immediately : using guard class we write it as below
+    if (!query) return;
+    // model.loadSearchResults("pizza"); returns nothing so we won't store it we will just awaits it
+
+    //2) LOAD SEARCH RESULTS
+    await model.loadSearchResults(query);
+
+    // 3)RENDER RESULTS
+    console.log(model.state.search.results);
+  } catch (err) {}
+};
+controlSearchResults();
 
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  searchView.addhandlerSearch(controlSearchResults);
 };
 
 init();
