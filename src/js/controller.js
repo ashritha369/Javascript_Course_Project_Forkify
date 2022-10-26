@@ -3,10 +3,16 @@ import * as model from "./model.js";
 //importing recipe view
 import recipeView from "./views/recipeView.js";
 import searchView from "./views/searchView.js";
+import resultsView from "./views/resultsView.js";
 
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import recipeView from "./views/recipeView.js";
+// import { async } from "regeneration-runtime";
+
+// below lines are from parcel
+if (module.hot) {
+  module.hot.accept();
+}
 
 // SHOW RECIPE
 const controlRecipes = async function () {
@@ -26,6 +32,8 @@ const controlRecipes = async function () {
     // 2)RENDERING RECIPE
     //  model.state.recipe 's data is passed to render () method as shown below:
     recipeView.render(model.state.recipe);
+    console.log("model.state.recipe:", model.state.recipe);
+
     // render() method will take that data and will store that data as this. #data in recipeView.js
   } catch (err) {
     recipeView.renderError();
@@ -34,6 +42,7 @@ const controlRecipes = async function () {
 // SEARCH RECIPE
 const controlSearchResults = async function () {
   try {
+    resultsView.renderSpinner();
     // 1)GET SEARCH QUERY , here query can be anything like 'pizza';
     const query = searchView.getQuery();
     // if there is no query then return immediately : using guard class we write it as below
@@ -45,12 +54,16 @@ const controlSearchResults = async function () {
 
     // 3)RENDER RESULTS
     console.log(model.state.search.results);
-  } catch (err) {}
+    resultsView.render(model.state.search.results);
+  } catch (err) {
+    console.log(err);
+  }
 };
 controlSearchResults();
 
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  // console.log("controlrecipes", controlRecipes);
   searchView.addhandlerSearch(controlSearchResults);
 };
 
